@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+    
+    .verysmall{
+        font-size: 12px;
+    }
+    .small{
+    font-size: 16px;
+     
+    }
+    .medium{
+    font-size: 18px;
+    }
+    .large{
+font-size: 24px;
+    }
+    .extralarge{
+font-size: 34px;
+    }
+
+    
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+    
+    .verysmall{
+    font-size: 14px;
+    }
+    .small{
+    font-size: 18px;
+     
+    }
+    .medium{
+    font-size: 18px;
+    }
+    .large{
+font-size: 28px;
+    }
+    .extralarge{
+font-size: 40px;
+    }
+
+    
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+    
+    .verysmall{
+    font-size: 16px;
+
+    }
+    .small{
+     font-size: 18px;
+    }
+    .medium{
+font-size: 21px;
+    }
+    .large{
+font-size: 36px;
+    }
+    .extralarge{
+font-size: 58px;
+    }
+
+    
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+    
+  
+    /* .medium{
+
+    } */
+    .large{
+font-size: 44px;
+    }
+    .extralarge{
+font-size: 60px;
+    }
+
+    
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+/* @media only screen and (min-width: 1200px) {
+    
+    .verysmall{
+
+    }
+    .small{
+     
+    }
+    .medium{
+
+    }
+    .large{
+
+    }
+    .extralarge{
+
+    }
+
+    
+} */
+
+html {
+    
+    scroll-behavior: smooth;
+}
