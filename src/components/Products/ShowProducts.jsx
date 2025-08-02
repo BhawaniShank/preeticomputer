@@ -1,9 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useMemo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import Slider from 'react-slick';
 
 function ShowProducts() {
   const [isActive, setIsActive] = useState(0);
+  const [visibleProducts, setVisibleProducts] = useState(20); // Show only 20 products initially
 
   const text = "text-2xl md:text-3xl lg:text-5xl";
 
@@ -78,7 +79,6 @@ function ShowProducts() {
     },
 
     // Laptop Product Section 
-
     {
       image: "compressed_images/battery.webp",
       description: "Laptop Battery",
@@ -518,8 +518,10 @@ function ShowProducts() {
 
   ];
 
-    const sliderRef = useRef(null);
-     const settings = {
+  const sliderRef = useRef(null);
+  
+  // Memoized settings for better performance
+  const settings = useMemo(() => ({
     dots: false,
     infinite: false,
     speed: 300,
@@ -552,11 +554,20 @@ function ShowProducts() {
         }
       }
     ]
-  };
+  }), []);
 
-  const filteredCards = cards.filter(card => card.category === categories[isActive]);
+  // Memoized filtered cards for better performance
+  const filteredCards = useMemo(() => {
+    const filtered = cards.filter(card => card.category === categories[isActive]);
+    return filtered.slice(0, visibleProducts); // Only show visible products
+  }, [cards, categories, isActive, visibleProducts]);
 
-      const {
+  // Load more products function
+  const loadMoreProducts = useCallback(() => {
+    setVisibleProducts(prev => prev + 20);
+  }, []);
+
+  const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting, isSubmitSuccessful },
@@ -572,169 +583,195 @@ function ShowProducts() {
     }, 1000);
   };
 
-  const contactref = useRef(null)
-  const [selectedProduct, setSelectedProduct]=useState(null)
+  const contactref = useRef(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
-
-    const scrollToSection = (productdescription) => {
-    //  window.scrollTo({ top:[800], behavior: "smooth" });
-    contactref.current.scrollIntoView();
-     setSelectedProduct(productdescription);
-    
+  const scrollToSection = (productdescription) => {
+    setSelectedProduct(productdescription);
+    contactref.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-
-
-  
-
-
+  // Optimized product card component
+  const ProductCard = React.memo(({ card, index }) => (
+    <div 
+      key={index}
+      className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+      onClick={() => scrollToSection(card.description)}
+    >
+      <div className="relative overflow-hidden rounded-t-lg">
+        <img
+          src={card.image}
+          alt={card.description}
+          className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
+          loading="lazy"
+          onError={(e) => {
+            e.target.src = 'compressed_images/placeholder.webp'; // Fallback image
+          }}
+        />
+      </div>
+      <div className="p-4">
+        <h3 className="text-sm font-semibold text-gray-800 mb-2 line-clamp-2">
+          {card.description}
+        </h3>
+        <button className="w-full bg-blue-500 text-white py-2 px-4 rounded-md text-sm font-medium hover:bg-blue-600 transition-colors duration-200">
+          Get Quote
+        </button>
+      </div>
+    </div>
+  ));
 
   return (
-    <div className='w-full max-w-[100em] mx-auto  flex flex-col items-center justify-center py-10'>
-      <h1 className={`font-semibold  large`}><spen className='text-blue-500'>Our Products</spen></h1>
-      <p className='medium font-semibold mt-4 text-center px-4'>
-        Looking for reliable parts? PreetiComputers offers quality accessories like keyboards, SSDs, chargers, and more <br /> all tested and budget-friendly.
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className={`${text} font-bold text-gray-900 mb-4`}>
+            Our <span className="text-blue-600">Products</span>
+          </h1>
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            Discover our comprehensive range of computer hardware, accessories, and components. 
+            Quality products at competitive prices for all your computing needs.
+          </p>
+        </div>
 
-
-      </p>
-
-      {/* <div className='flex gap-3 pt-8 flex-wrap items-center justify-center'>
-        {categories.map((category, i) => (
-          <button
-            key={i}
-            onClick={() => setIsActive(i)}
-            className={`${isActive === i ? "bg-blue-500 text-white" : "bg-gray-200 text-black"} rounded-lg small p-2 px-4 transition duration-200`}
-          >
-            {category}
-          </button>
-        ))}
-      </div> */}
-
-{/* React Slick Categories Slider */}
-      <div className="w-full px-4 py-8 max-w-[95vw] mx-auto">
-        <Slider {...settings} ref={sliderRef}>
-          {categories.map((category, i) => (
-            <div key={i} className="px-1">
-              <button
-                onClick={() => {
-                  setIsActive(i);
-                  // Optional: Center the active button
-                  sliderRef.current.slickGoTo(i);
-                }}
-                className={`w-full ${
-                  isActive === i 
-                    ? "bg-blue-500 text-white shadow-md" 
-                    : "bg-gray-200 text-black hover:bg-gray-300"
-                } rounded-lg overflow-hidden w-full  small p-2 px-4 transition-all duration-200 whitespace-nowrap`}
-              >
-                {category}
-              </button>
-            </div>
+        {/* Category Tabs */}
+        <div className="flex flex-wrap justify-center gap-4 mb-8">
+          {categories.map((category, index) => (
+            <button
+              key={index}
+              onClick={() => {
+                setIsActive(index);
+                setVisibleProducts(20); // Reset visible products when changing category
+              }}
+              className={`px-6 py-3 rounded-full font-medium transition-all duration-200 ${
+                isActive === index
+                  ? 'bg-blue-500 text-white shadow-lg'
+                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+              }`}
+            >
+              {category}
+            </button>
           ))}
-        </Slider>
-      </div>
+        </div>
 
+        {/* Products Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-8">
+          {filteredCards.map((card, index) => (
+            <ProductCard key={index} card={card} index={index} />
+          ))}
+        </div>
 
+        {/* Load More Button */}
+        {filteredCards.length < cards.filter(card => card.category === categories[isActive]).length && (
+          <div className="text-center">
+            <button
+              onClick={loadMoreProducts}
+              className="bg-blue-500 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-600 transition-colors duration-200"
+            >
+              Load More Products
+            </button>
+          </div>
+        )}
 
-      <div className='grid grid-cols-2 gap-4 mt-10 px-6 md:px-0 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
-        {filteredCards.map((item, j) => (
-          <section key={j} className=" justify-between flex flex-col  w-full  rounded-2xl   transition">
-            <>
-            <img className='aspect-square object-cover rounded-2xl w-52 mx-auto' src={item.image} alt={item.description} />
-            <p className='text-center max-w-[11em] min-h-14 mx-auto extrasmall  py-2 font-semibold capitalize'>{item.description}</p>
-            </>
-            <button onClick={()=>{scrollToSection(item.description)}} className='w-full text-center  rounded-xl text-white py-2 bg-blue-500'>Book Now</button>
-          </section>
-        ))}
-      </div>
+        {/* Contact Form */}
+        <div ref={contactref} className="mt-16 bg-white rounded-lg shadow-lg p-8">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Get a Quote for {selectedProduct || 'Your Product'}
+            </h2>
+            <p className="text-gray-600">
+              Fill out the form below and we'll get back to you with a competitive quote.
+            </p>
+          </div>
 
- <div ref={contactref} className="w-full max-w-[80em] px-6 sm:px-12 mx-auto py-12">
-       
-        <h2 className="text-center text-2xl font-extrabold mb-12">Book Now</h2>
-
-        <div className="flex space-y-10 flex-col md:flex-row md:space-x-20">
-       <div className='w-full  md:w-[50%]'>
-       <img src="/Contact/order.webp" className='w-full h-full rounded-2xl' alt="" />
-       </div>
-
-          <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
-            <div className="flex flex-col gap-4 md:flex-row">
-              <div className="flex-1">
+          <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl mx-auto space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Full Name *
+                </label>
                 <input
                   type="text"
-                  placeholder="Your Name"
-                  {...register('name', { required: 'Name is required' })}
-                  className="w-full border border-gray-500 rounded-sm py-3 px-4 text-sm text-gray-500 placeholder-gray-400 
-                    focus:border-blue-500 focus:ring-0 focus:outline-none border-l-4 bg-[#f3f4f6] border-l-blue-500"
+                  {...register('fullName', { required: 'Full name is required' })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Enter your full name"
                 />
-                {errors.name && (
-                  <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
+                {errors.fullName && (
+                  <p className="text-red-500 text-sm mt-1">{errors.fullName.message}</p>
                 )}
               </div>
 
-              <div className="flex-1">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Phone Number *
+                </label>
                 <input
-                  type="email"
-                  placeholder="Your Email"
-                  {...register('email', {
-                    required: 'Email is required',
-                    pattern: {
-                      value: /^\S+@\S+$/i,
-                      message: 'Invalid email address',
-                    },
-                  })}
-                  className="w-full border border-gray-500 rounded-sm py-3 px-4 text-sm text-gray-500 placeholder-gray-400 
-                    focus:border-blue-500 focus:ring-0 focus:outline-none border-l-4  bg-[#f3f4f6] border-l-blue-500"
+                  type="tel"
+                  {...register('phone', { required: 'Phone number is required' })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Enter your phone number"
                 />
-                {errors.email && (
-                  <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
+                {errors.phone && (
+                  <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
                 )}
               </div>
             </div>
 
             <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Email Address
+              </label>
+              <input
+                type="email"
+                {...register('email')}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Enter your email address"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Product Interest
+              </label>
               <input
                 type="text"
-                defaultValue={selectedProduct}
-                placeholder="Your Product"
-                {...register('Product', { required: 'Product is required' })}
-                className="w-full border border-gray-500 rounded-sm py-3 px-4 text-sm text-gray-500 placeholder-gray-400 
-                  focus:border-blue-500 focus:ring-0 focus:outline-none border-l-4 bg-[#f3f4f6] border-l-blue-500"
+                {...register('productInterest')}
+                defaultValue={selectedProduct || ''}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="What product are you interested in?"
               />
-              {errors.subject && (
-                <p className="text-red-500 text-xs mt-1">{errors.product.message}</p>
-              )}
             </div>
 
             <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Message
+              </label>
               <textarea
-                rows="4"
-                placeholder="Your Message"
-                {...register('message', { required: 'Message is required' })}
-                className="w-full border border-gray-500 rounded-sm py-3 px-4 text-sm text-gray-500 placeholder-gray-400 
-                  focus:border-blue-500 focus:ring-0 focus:outline-none border-l-4 bg-[#f3f4f6] border-l-blue-500 resize-none"
+                {...register('message')}
+                rows={4}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Tell us more about your requirements..."
               />
-              {errors.message && (
-                <p className="text-red-500 text-xs mt-1">{errors.message.message}</p>
-              )}
             </div>
 
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="bg-blue-500 text-white text-sm font-semibold rounded-full py-2.5 px-6 mt-2 hover:bg-blue-400 cursor-pointer transition-colors disabled:opacity-50"
-            >
-              {isSubmitting ? 'Sending...' : 'Send Message'}
-            </button>
+            <div className="text-center">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="bg-blue-500 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? 'Sending...' : 'Get Quote'}
+              </button>
+            </div>
 
             {isSubmitSuccessful && (
-              <p className="text-green-500 text-sm mt-2">Message submitted successfully!</p>
+              <div className="text-center text-green-600 font-medium">
+                Thank you! We'll get back to you soon.
+              </div>
             )}
           </form>
         </div>
       </div>
-
-
     </div>
   );
 }

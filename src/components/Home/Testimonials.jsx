@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Slider from "react-slick";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { SiComma } from "react-icons/si";
@@ -9,7 +9,7 @@ const testimonials = [
   {
     name: "Prerna Sneh",
     image: "compressed_images/unnamed.webp",
-    text: `I had a wonderful experience with this service! From the moment I reached out, the owner was extremely polite, professional, and helpful. Their behavior made the entire process smooth and comfortable, and it’s evident that customer satisfaction is a top priority for them.`,
+    text: `I had a wonderful experience with this service! From the moment I reached out, the owner was extremely polite, professional, and helpful. Their behavior made the entire process smooth and comfortable, and it's evident that customer satisfaction is a top priority for them.`,
   },
   {
     name: "Raj Gandhi",
@@ -36,8 +36,6 @@ const testimonials = [
     image: "compressed_images/6.webp",
     text: `I went to laptop service center for my Lenovo laptop repairing. Now, I am using my laptop after they did the fantastic work as if this laptop belongs to them. Thorough analysis of the problem with no cheating at all to their customers, candid feedback with proper explanations are real testimony of the owner.`,
   },
-
-
   {
     name: "Granth Dubey",
     image: "compressed_images/7.webp",
@@ -80,19 +78,23 @@ const Testimonials = () => {
     }));
   };
 
-  const settings = {
+  // Memoized settings for better performance
+  const settings = useMemo(() => ({
     dots: false,
     arrows: false,
     infinite: true,
     speed: 500,
     slidesToShow: 3,
-    slidesToScroll: 3,
+    slidesToScroll: 1, // Reduced from 3 to 1 for smoother experience
+    autoplay: true,
+    autoplaySpeed: 5000,
+    pauseOnHover: true,
     responsive: [
       {
         breakpoint: 1024,
         settings: {
           slidesToShow: 2,
-          slidesToScroll: 2,
+          slidesToScroll: 1,
         },
       },
       {
@@ -103,7 +105,60 @@ const Testimonials = () => {
         },
       },
     ],
-  };
+  }), []);
+
+  // Optimized testimonial card component
+  const TestimonialCard = React.memo(({ item, idx }) => (
+    <div className="px-4">
+      <div 
+        className={`bg-white rounded-tr-4xl rounded-bl-4xl p-8 flex flex-col ${
+          expandedReviews[idx] ? 'min-h-[350px]' : 'min-h-[300px]'
+        } transition-all duration-300`}
+      >
+        <div className="flex-grow">
+          <div className="flex items-center space-x-4 mb-4">
+            <img
+              src={item.image}
+              alt={item.name}
+              className="w-12 h-12 rounded-full object-cover"
+              loading="lazy"
+            />
+            <div>
+              <h3 className="text-[#0a3a57] font-semibold small">
+                {item.name}
+              </h3>
+            </div>
+          </div>
+          <p className={`text-gray-600 verysmall leading-relaxed mb-4 ${
+            expandedReviews[idx] ? '' : 'line-clamp-5'
+          }`}>
+            {item.text}
+          </p>
+        </div>
+        <div className="flex justify-between items-end">
+          <div className="text-yellow-400 text-xs flex space-x-1">
+            <FaStar />
+            <FaStar />
+            <FaStar />
+            <FaStar />
+            <FaStarHalfAlt />
+          </div>
+          {item.text.length > 200 && (
+            <button 
+              onClick={() => toggleReadMore(idx)}
+              className="text-blue-500 text-xs font-medium hover:underline"
+            >
+              {expandedReviews[idx] ? 'Read Less' : 'Read More'}
+            </button>
+          )}
+        </div>
+        <div className="absolute lg:flex top-6 right-6 text-[#d6e6e3] hidden text-2xl md:text-4xl lg:text-6xl font-extrabold select-none leading-none pointer-events-none">
+          <SiComma />
+          <SiComma />
+        </div>
+      </div>
+    </div>
+  ));
 
   return (
     <section className="bg-[#f5f6f7] py-16 px-6">
@@ -120,54 +175,7 @@ const Testimonials = () => {
       <div className="mt-12 max-w-7xl mx-auto">
         <Slider {...settings}>
           {testimonials.map((item, idx) => (
-            <div key={idx} className="px-4">
-              <div 
-                className={`bg-white rounded-tr-4xl rounded-bl-4xl p-8 flex flex-col ${
-                  expandedReviews[idx] ? 'min-h-[350px]' : 'min-h-[300px]'
-                } transition-all duration-300`}
-              >
-                <div className="flex-grow">
-                  <div className="flex items-center space-x-4 mb-4">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-12 h-12 rounded-full object-cover"
-                    />
-                    <div>
-                      <h3 className="text-[#0a3a57] font-semibold small">
-                        {item.name}
-                      </h3>
-                    </div>
-                  </div>
-                  <p className={`text-gray-600 verysmall leading-relaxed mb-4 ${
-                    expandedReviews[idx] ? '' : 'line-clamp-5'
-                  }`}>
-                    {item.text}
-                  </p>
-                </div>
-                <div className="flex justify-between items-end">
-                  <div className="text-yellow-400 text-xs flex space-x-1">
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStarHalfAlt />
-                  </div>
-                  {item.text.length > 200 && (
-                    <button 
-                      onClick={() => toggleReadMore(idx)}
-                      className="text-blue-500 text-xs font-medium hover:underline"
-                    >
-                      {expandedReviews[idx] ? 'Read Less' : 'Read More'}
-                    </button>
-                  )}
-                </div>
-                <div className="absolute lg:flex top-6 right-6 text-[#d6e6e3] hidden text-2xl md:text-4xl lg:text-6xl font-extrabold select-none leading-none pointer-events-none">
-                  <SiComma />
-                  <SiComma />
-                </div>
-              </div>
-            </div>
+            <TestimonialCard key={idx} item={item} idx={idx} />
           ))}
         </Slider>
       </div>
