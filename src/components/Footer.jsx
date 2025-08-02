@@ -74,9 +74,8 @@ const Footer = () => {
               <li>Laptop Repair</li>
               <li>Computer Repair</li>
               <li>Data Recovery</li>
-              <li>Phone Unlock</li>
               <li>Hardware Upgrade
-                <li>Phone Repair</li>
+                {/* <li>Phone Repair</li> */}
               </li>
             </ul>
           </div>
@@ -93,6 +92,10 @@ const Footer = () => {
                 <br />
                 <span>+91 9829 179 799</span>
                 <br />
+                <span>+91 9828 079 799</span>
+<br />
+                <span>+91 9462 724 290</span>
+
               </li>
             </ul>
           </div>
@@ -111,7 +114,7 @@ const Footer = () => {
               <li>
                 <span className="font-semibold text-white">Email</span>
                 <br />
-                <span>support@preeticomputers.com</span>
+                <span>PreetiComputersjaipur@gmail.com</span>
                 <br />
                 {/* <span>saurabhitservicessolutions@gmail.com</span> */}
               </li>
@@ -119,7 +122,7 @@ const Footer = () => {
                 <span className="font-semibold text-white">Location</span>
                 <br />
                 <span>
-                  WP6G+2CW Dussehra Ground, Maharana Pratap Rd, Shree Ram Nagar - A, Sunder Nagar, Panchyawala, Jaipur, Rajasthan 302034, India
+              Shop No. F7 First Crossing First Floor,Ramgali no. 6 Opp. Makker Prints Rajapark jaipur 302004 rajasthan
                 </span>
               </li>
             </ul>

@@ -50,11 +50,11 @@ const OurService = () => {
       title: "Hardware Upgrade",
       description: "Boost performance with SSD, RAM or GPU upgrades",
     },
-    {
-      image: "compressed_images/Phonerepair.webp",
-      title: "Phone Repair",
-      description: "Screen, battery and charging port repairs while you wait",
-    },
+    // {
+    //   image: "compressed_images/Phonerepair.webp",
+    //   title: "Phone Repair",
+    //   description: "Screen, battery and charging port repairs while you wait",
+    // },
     {
       image: "compressed_images/os.webp",
       title: "OS Installation & Formatting",

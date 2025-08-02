@@ -9,9 +9,9 @@ function ContactPage() {
     <>
     <div className='w-full relative h-full'>
          <div
-        className="w-full pt-20 overflow-hidden   min-h-[30em] py-10 flex flex-col h-full items-center justify-center max-w-[120em] mx-auto text-white relative"
+        className="w-full pt-20 overflow-hidden   min-h-[34em] py-10 flex flex-col h-full items-center justify-center max-w-[120em] mx-auto text-white relative"
         style={{
-            backgroundImage: ` url('compressed_images/homepc.webp')`,
+            backgroundImage: ` url('compressed_images/homepc.jpeg')`,
             backgroundSize: 'cover',
             backgroundPosition: 'top',
             
@@ -30,7 +30,7 @@ function ContactPage() {
       
        <p className='flex gap-2 ptext items-center w-full'><CgPhone className='text-5xl mb-3 text-[#1D85C3]' /> +91 9829 179 799</p>
    
-       <p className='flex gap-2 ptext max-w-xl items-center w-full'> <span><FaMapMarkerAlt className='text-5xl text-[#1D85C3]' /> </span>WP6G+2CW Dussehra Ground, Maharana Pratap Rd, Shree Ram Nagar - A, Sunder Nagar, Panchyawala, Jaipur, Rajasthan 302034, India</p>
+       <p className='flex gap-2 ptext max-w-xl items-center w-full'> <span><FaMapMarkerAlt className='text-5xl text-[#1D85C3]' /> </span>Shop No. F7 First Crossing First Floor,Ramgali no. 6 Opp. Makker Prints Rajapark jaipur 302004 rajasthan</p>
        
       </section>
       <section className='md:w-[80%] mb-10 xl:w-auto'>

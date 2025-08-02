@@ -51,8 +51,7 @@ const ContactUs = () => {
               <div>
                 <p className="font-semibold small text-gray-900 mb-1">Address:</p>
                 <p className="text-gray-600 verysmall leading-relaxed">
-                  WP6G+2CW Dussehra Ground, Maharana Pratap Rd, Shree Ram Nagar - A, 
-                  Sunder Nagar, Panchyawala, Jaipur, Rajasthan 302034, India
+               Shop No. F7 First Crossing First Floor,Ramgali no. 6 Opp. Makker Prints Rajapark jaipur 302004 rajasthan
                 </p>
               </div>
             </div>

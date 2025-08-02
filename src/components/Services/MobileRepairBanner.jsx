@@ -20,7 +20,7 @@ const MobileRepairBanner = () => {
         {/* Content */}
         <div className="flex-1 text-center min-w-80 md:text-left">
           <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
-            Need Professional <span className="text-blue-200">Phone Repair</span>?
+            Need Professional <span className="text-blue-200">Laptop Repair</span>?
           </h3>
           <p className="text-blue-100 max-w-lg mx-auto md:mx-0">
             Fast, reliable repairs with warranty. We fix screens, batteries, charging ports and more for all major brands.

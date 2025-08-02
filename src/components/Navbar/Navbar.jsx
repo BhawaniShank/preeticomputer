@@ -89,7 +89,8 @@ useEffect(()=>{
           >
             {/* FixPC */}
           <img
-  src="compressed_images/preeticomputerlogo.webp"
+  // src="compressed_images/preeticomputerlogo.webp"
+  src="logo.png"
   alt="Preeti Computer Logo"
   width="63"
   height="63"

@@ -17,7 +17,7 @@ const HeroSection = () => {
         playsInline
       />
         {/* Overlay */}
-        <div className='absolute inset-0 bg-black/90 z-10'></div>
+        <div className='absolute inset-0 bg-black/70 z-10'></div>
       {/* Content */}
       <motion.div
       initial={{ x:-100, opacity: 0 }}
